@@ -1,0 +1,8 @@
+.star-container {
+  text-align: center;
+}
+
+div.star-container > img {
+  cursor: pointer;
+  color: grey;
+}
