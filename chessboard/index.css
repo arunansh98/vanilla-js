@@ -1,0 +1,41 @@
+.board {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.rows {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.white-box,
+.black-box {
+  height: 4rem;
+  width: 4rem;
+}
+
+.white-box {
+  background-color: aliceblue;
+}
+
+.black-box {
+  background-color: black;
+}
+
+.highlighted {
+  background-color: #6dd4f1;
+}
+
+.attacked {
+  background-color: #059aff;
+}
