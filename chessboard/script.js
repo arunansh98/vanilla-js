@@ -1,70 +1,95 @@
+let chessboard = []; // Cache for board cells
+const BOARD_LENGTH = 5; // Dynamic board size
+
 constructChessBoard();
 constructEventListeners();
 
+/**
+ * @description Constructs the chessboard and caches cells.
+ */
 function constructChessBoard() {
   const rows = document.getElementById("rows");
-  let boolean = false;
-  for (let i = 0; i < 8; i++) {
-    const row = document.createElement("div");
+  let isBlackRowStart = false;
 
+  for (let i = 0; i < BOARD_LENGTH; i++) {
+    const row = document.createElement("div");
     row.classList.add("row");
     row.id = i;
 
-    for (let j = 0; j < 8; j++) {
+    chessboard.push([]);
+
+    for (let j = 0; j < BOARD_LENGTH; j++) {
       const box = document.createElement("div");
       box.id = i.toString() + j.toString();
       box.classList.add(
         j % 2 === 0
-          ? boolean
+          ? isBlackRowStart
             ? "black-box"
             : "white-box"
-          : boolean
+          : isBlackRowStart
           ? "white-box"
           : "black-box"
       );
+      chessboard[i].push(box);
       row.appendChild(box);
     }
+
     rows.appendChild(row);
-    boolean = !boolean;
+    isBlackRowStart = !isBlackRowStart;
   }
 }
 
+/**
+ * @description Attaches event listeners using event delegation.
+ */
 function constructEventListeners() {
-  for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
-    for (let colIndex = 0; colIndex < 8; colIndex++) {
-      let element = document.getElementById(
-        rowIndex.toString() + colIndex.toString()
-      );
-      element.addEventListener("mouseover", () => {
-        handleMouseEvent("mouseover", element, rowIndex, colIndex);
-      });
-      element.addEventListener("mouseout", () => {
-        handleMouseEvent("mouseout", element, rowIndex, colIndex);
-      });
-    }
-  }
+  let rows = document.getElementById("rows");
+  ["mouseover", "mouseout"].forEach((type) => {
+    rows.addEventListener(type, (event) => {
+      let { target } = event;
+      if (
+        target.classList.contains("white-box") ||
+        target.classList.contains("black-box")
+      ) {
+        const [rowIndex, colIndex] = target.id.split("").map(Number);
+        handleMouseEvent(type, target, rowIndex, colIndex);
+      }
+    });
+  });
 }
 
+/**
+ * @description Highlights the hovered cell and its attacked cells.
+ */
 function handleMouseEvent(type, element, rowIndex, colIndex) {
   let isAdd = type === "mouseover";
   if (isAdd) element.classList.add("highlighted");
   else element.classList.remove("highlighted");
-  for (let i = rowIndex - 1, j = colIndex - 1; i >= 0, j >= 0; i--, j--) {
-    handleBoxClasses(isAdd, i, j);
-  }
-  for (let i = rowIndex - 1, j = colIndex + 1; i >= 0, j < 8; i--, j++) {
-    handleBoxClasses(isAdd, i, j);
-  }
-  for (let i = rowIndex + 1, j = colIndex - 1; i < 8, j >= 0; i++, j--) {
-    handleBoxClasses(isAdd, i, j);
-  }
-  for (let i = rowIndex + 1, j = colIndex + 1; i < 0, j < 8; i++, j++) {
-    handleBoxClasses(isAdd, i, j);
-  }
+
+  let directions = [
+    [-1, -1],
+    [-1, 1],
+    [1, -1],
+    [1, 1],
+  ];
+
+  directions.forEach(([rowStep, colStep]) => {
+    let i = rowIndex + rowStep;
+    let j = colIndex + colStep;
+
+    while (i >= 0 && i < BOARD_LENGTH && j >= 0 && j < BOARD_LENGTH) {
+      handleBoxClasses(isAdd, i, j);
+      i += rowStep;
+      j += colStep;
+    }
+  });
 }
 
+/**
+ * @description Toggles the "attacked" class for a specific cell.
+ */
 function handleBoxClasses(isAdd, i, j) {
-  let box = document.getElementById(i.toString() + j.toString());
+  let box = chessboard[i][j];
   if (box) {
     if (isAdd) box.classList.add("attacked");
     else box.classList.remove("attacked");
