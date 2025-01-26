@@ -1,5 +1,5 @@
 let chessboard = []; // Cache for board cells
-const BOARD_LENGTH = 5; // Dynamic board size
+const BOARD_LENGTH = 8; // Dynamic board size
 
 constructChessBoard();
 constructEventListeners();
