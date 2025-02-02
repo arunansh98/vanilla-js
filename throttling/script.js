@@ -5,7 +5,7 @@ function apiCall() {
 }
 
 let lastCall = 0;
-function thottle(func, delay) {
+function throttle(func, delay) {
   return function (...args) {
     const now = Date.now();
     if (now - lastCall >= delay) {
@@ -15,7 +15,17 @@ function thottle(func, delay) {
   };
 }
 
-document.addEventListener("scroll", () => {
-  let throttledFunction = thottle(apiCall, 1000);
-  throttledFunction();
-});
+// document.addEventListener("scroll", () => {
+//   let throttledFunction = throttle(apiCall, 1000);
+//   throttledFunction();
+// });
+
+handleButtonClick();
+
+function handleButtonClick() {
+  let submitButton = document.getElementById("submit");
+  submitButton.addEventListener("click", () => {
+    let throttledFunction = throttle(apiCall, 500);
+    throttledFunction();
+  });
+}
