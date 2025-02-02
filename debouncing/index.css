@@ -1,0 +1,15 @@
+.text {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+input {
+  padding: 1rem;
+  outline: none;
+  border-radius: 5px;
+}
+
+input,
+input::placeholder {
+  text-align: center;
+}
